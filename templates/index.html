@@ -10,20 +10,28 @@
     p { line-height: 1.5; }
     form { margin-top: 2rem; display: grid; gap: 0.8rem; max-width: 22rem; }
     input { font: inherit; padding: 0.5rem; }
-    button { background: #166534; color: white; border: 0; padding: 0.7rem 1rem; font: inherit; cursor: pointer; }
+    button, .pago { background: #166534; color: white; border: 0; padding: 0.7rem 1rem; font: inherit; cursor: pointer; text-decoration: none; display: inline-block; }
     .error { background: #fef2f2; color: #991b1b; padding: 0.8rem 1rem; }
+    .aviso { background: #f0fdf4; color: #166534; padding: 0.8rem 1rem; }
     small { display: block; margin-top: 2rem; color: #57534e; }
   </style>
 </head>
 <body>
   <h1>El Excel sale solo si el saldo cuadra.</h1>
-  <p>Sube el estado de cuenta de Interbank, BBVA o BCP. Si el PDF tiene clave, pon el DNI o el RUC. Si una fila no cierra, no hay descarga.</p>
+  <p>Sube el estado de cuenta de Interbank, BBVA o BCP. Si el PDF tiene clave, pon el DNI o el RUC. La primera conversion es gratis. La siguiente cuesta S/ 15.</p>
+  {% if aviso == "pagado" %}<p class="aviso">Pago confirmado. Sube el PDF para convertir esta vez.</p>{% endif %}
+  {% if aviso == "no-pago" %}<p class="error">El pago no quedo aprobado.</p>{% endif %}
   {% if error %}<p class="error">{{ error }}</p>{% endif %}
+  {% if bloqueado %}
+    <p>Ya usaste la conversion gratis. La siguiente cuesta S/ 15 y no guarda el archivo.</p>
+    <a class="pago" href="/pagar">Pagar S/ 15</a>
+  {% else %}
   <form action="/convertir" method="post" enctype="multipart/form-data">
     <input type="file" name="pdf" accept="application/pdf" required>
     <input type="password" name="clave" placeholder="Contrasena, si el PDF la pide" autocomplete="off">
     <button type="submit">Convertir</button>
   </form>
+  {% endif %}
   <small>El archivo y la clave se usan en esta corrida y no se guardan.</small>
 </body>
 </html>
