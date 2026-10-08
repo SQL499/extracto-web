@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Estado de cuenta a Excel</title>
+  <style>
+    body { font-family: Georgia, serif; max-width: 38rem; margin: 4rem auto; padding: 0 1rem; color: #1c1917; }
+    h1 { font-size: 1.8rem; line-height: 1.2; }
+    p { line-height: 1.5; }
+    form { margin-top: 2rem; display: grid; gap: 0.8rem; max-width: 22rem; }
+    input { font: inherit; padding: 0.5rem; }
+    button { background: #166534; color: white; border: 0; padding: 0.7rem 1rem; font: inherit; cursor: pointer; }
+    .error { background: #fef2f2; color: #991b1b; padding: 0.8rem 1rem; }
+    small { display: block; margin-top: 2rem; color: #57534e; }
+  </style>
+</head>
+<body>
+  <h1>El Excel sale solo si el saldo cuadra.</h1>
+  <p>Sube el estado de cuenta de Interbank, BBVA o BCP. Si el PDF tiene clave, pon el DNI o el RUC. Si una fila no cierra, no hay descarga.</p>
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+  <form action="/convertir" method="post" enctype="multipart/form-data">
+    <input type="file" name="pdf" accept="application/pdf" required>
+    <input type="password" name="clave" placeholder="Contrasena, si el PDF la pide" autocomplete="off">
+    <button type="submit">Convertir</button>
+  </form>
+  <small>El archivo y la clave se usan en esta corrida y no se guardan.</small>
+</body>
+</html>
